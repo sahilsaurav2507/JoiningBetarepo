@@ -1,0 +1,111 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: lawviksh_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-Sahil@123}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-lawviksh_db}
+      MYSQL_USER: ${MYSQL_USER:-lawviksh_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-lawviksh_password}
+    ports:
+      - "127.0.0.1:3306:3306"  # Only accessible from localhost for security
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./lawdata.sql:/docker-entrypoint-initdb.d/lawdata.sql
+    networks:
+      - lawviksh_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+
+  # FastAPI Application
+  app:
+    build: .
+    container_name: lawviksh_app
+    restart: unless-stopped
+    expose:
+      - "8000"  # Only expose to internal network, not to host
+    environment:
+      # Database Configuration
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: ${MYSQL_DATABASE:-lawviksh_db}
+      DB_USER: ${MYSQL_USER:-lawviksh_user}
+      DB_PASSWORD: ${MYSQL_PASSWORD:-lawviksh_password}
+      
+      # Security Configuration
+      SECRET_KEY: ${SECRET_KEY:-09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7}
+      ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 30
+      
+      # Admin Credentials
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
+      
+      # Server Configuration
+      HOST: 0.0.0.0
+      PORT: 8000
+      DEBUG: false
+      
+      # CORS Configuration
+      CORS_ORIGINS: ${CORS_ORIGINS:-https://www.lawvriksh.com,https://lawvriksh.com,http://localhost:3000}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - lawviksh_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: lawviksh_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - app
+    networks:
+      - lawviksh_network
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+        reservations:
+          memory: 64M
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  lawviksh_network:
+    driver: bridge 

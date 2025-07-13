@@ -1,0 +1,112 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: lawviksh_mysql_prod
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "127.0.0.1:3306:3306"  # Only accessible from localhost
+    volumes:
+      - mysql_data_prod:/var/lib/mysql
+      - ./lawdata.sql:/docker-entrypoint-initdb.d/lawdata.sql
+    networks:
+      - lawviksh_network_prod
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    security_opt:
+      - no-new-privileges:true
+    read_only: false
+
+  # FastAPI Application
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: lawviksh_app_prod
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8000:8000"  # Only accessible from localhost
+    environment:
+      # Database Configuration
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: ${MYSQL_DATABASE}
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      
+      # Security Configuration
+      SECRET_KEY: ${SECRET_KEY}
+      ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 30
+      
+      # Admin Credentials
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      
+      # Server Configuration
+      HOST: 0.0.0.0
+      PORT: 8000
+      DEBUG: false
+      
+      # CORS Configuration
+      CORS_ORIGINS: ${CORS_ORIGINS}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - lawviksh_network_prod
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/tmp
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: lawviksh_nginx_prod
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.prod.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+      - nginx_logs:/var/log/nginx
+    depends_on:
+      - app
+    networks:
+      - lawviksh_network_prod
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx
+      - /var/run
+
+volumes:
+  mysql_data_prod:
+    driver: local
+  nginx_logs:
+    driver: local
+
+networks:
+  lawviksh_network_prod:
+    driver: bridge
+    internal: true  # Isolated network 
