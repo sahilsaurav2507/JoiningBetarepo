@@ -1,0 +1,111 @@
+#!/bin/bash
+
+echo "=== Manual MySQL Connection Fix ==="
+echo "Run these commands one by one on your Ubuntu server:"
+echo ""
+
+echo "1. First, let's see what containers are running:"
+echo "docker ps -a"
+echo ""
+
+echo "2. Stop the current deployment:"
+echo "docker-compose -f docker-compose.prod.external-mysql-linux.yml down"
+echo ""
+
+echo "3. Check if there's a MySQL container:"
+echo "docker ps -a | grep mysql"
+echo ""
+
+echo "4. If no MySQL container exists, create one:"
+echo "docker run -d \\"
+echo "  --name mysql_lawviksh \\"
+echo "  --network host \\"
+echo "  -e MYSQL_ROOT_PASSWORD=your_root_password \\"
+echo "  -e MYSQL_DATABASE=lawviksh_db \\"
+echo "  -e MYSQL_USER=lawviksh_user \\"
+echo "  -e MYSQL_PASSWORD=your_password \\"
+echo "  -v mysql_data:/var/lib/mysql \\"
+echo "  mysql:5.7"
+echo ""
+
+echo "5. Wait for MySQL to start (30 seconds):"
+echo "sleep 30"
+echo ""
+
+echo "6. Check if MySQL is running:"
+echo "docker ps | grep mysql"
+echo ""
+
+echo "7. Get the MySQL container IP:"
+echo "docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mysql_lawviksh"
+echo ""
+
+echo "8. Test MySQL connection:"
+echo "docker exec mysql_lawviksh mysql -u lawviksh_user -pyour_password -e 'SELECT 1;'"
+echo ""
+
+echo "9. Create the environment file with the correct MySQL IP:"
+echo "cat > .env.prod << 'EOF'"
+echo "# Production Environment Variables"
+echo "ENVIRONMENT=production"
+echo "DEBUG=False"
+echo ""
+echo "# Database Configuration"
+echo "DB_HOST=172.17.0.1  # Replace with actual MySQL IP from step 7"
+echo "DB_PORT=3306"
+echo "DB_NAME=lawviksh_db"
+echo "DB_USER=lawviksh_user"
+echo "DB_PASSWORD=your_password"
+echo ""
+echo "# CORS Configuration"
+echo "CORS_ORIGINS=https://www.lawvriksh.com,https://lawvriksh.com,http://localhost:3000,http://localhost:3001"
+echo ""
+echo "# Security"
+echo "SECRET_KEY=your-secret-key-here-change-in-production"
+echo "ALGORITHM=HS256"
+echo "ACCESS_TOKEN_EXPIRE_MINUTES=30"
+echo ""
+echo "# Server Configuration"
+echo "HOST=0.0.0.0"
+echo "PORT=8000"
+echo "EOF"
+echo ""
+
+echo "10. Start the application:"
+echo "docker-compose -f docker-compose.prod.external-mysql-linux.yml up -d"
+echo ""
+
+echo "11. Check the logs:"
+echo "docker-compose -f docker-compose.prod.external-mysql-linux.yml logs -f"
+echo ""
+
+echo "=== Alternative: Use localhost for MySQL ==="
+echo "If the above doesn't work, try using localhost instead:"
+echo ""
+
+echo "1. Update the environment file to use localhost:"
+echo "sed -i 's/DB_HOST=.*/DB_HOST=localhost/' .env.prod"
+echo ""
+
+echo "2. Restart the application:"
+echo "docker-compose -f docker-compose.prod.external-mysql-linux.yml restart"
+echo ""
+
+echo "=== Troubleshooting Commands ==="
+echo ""
+
+echo "Check MySQL logs:"
+echo "docker logs mysql_lawviksh"
+echo ""
+
+echo "Check application logs:"
+echo "docker-compose -f docker-compose.prod.external-mysql-linux.yml logs app"
+echo ""
+
+echo "Test MySQL from inside the app container:"
+echo "docker exec -it \$(docker-compose -f docker-compose.prod.external-mysql-linux.yml ps -q app) bash"
+echo "Then run: mysql -h 172.17.0.1 -u lawviksh_user -pyour_password -e 'SELECT 1;'"
+echo ""
+
+echo "Check network connectivity:"
+echo "docker exec -it \$(docker-compose -f docker-compose.prod.external-mysql-linux.yml ps -q app) ping 172.17.0.1" 
