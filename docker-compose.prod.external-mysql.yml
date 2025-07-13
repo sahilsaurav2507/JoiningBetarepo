@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  # FastAPI Application (without MySQL dependency)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: lawviksh_app_prod_external
+    restart: unless-stopped
+    environment:
+      - DB_HOST=host.docker.internal
+      - DB_PORT=3306
+      - DB_NAME=lawviksh_db
+      - DB_USER=root
+      - DB_PASSWORD=Sahil@123456//
+      - SECRET_KEY=${SECRET_KEY:-09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7}
+      - ALGORITHM=${ALGORITHM:-HS256}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES:-30}
+      - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin123}
+      - HOST=0.0.0.0
+      - PORT=8000
+      - DEBUG=False
+      - API_BASE_URL=${API_BASE_URL:-https://www.lawvriksh.com/api}
+      - API_PREFIX=${API_PREFIX:-/api}
+      - CORS_ORIGINS=${CORS_ORIGINS:-["https://www.lawvriksh.com","https://lawvriksh.com","https://app.lawvriksh.com","https://admin.lawvriksh.com"]}
+      - CORS_ALLOW_CREDENTIALS=${CORS_ALLOW_CREDENTIALS:-true}
+      - CORS_ALLOW_METHODS=${CORS_ALLOW_METHODS:-["GET","POST","PUT","DELETE","OPTIONS","PATCH"]}
+      - CORS_ALLOW_HEADERS=${CORS_ALLOW_HEADERS:-["*"]}
+      - CORS_EXPOSE_HEADERS=${CORS_EXPOSE_HEADERS:-["Content-Length","Content-Type","Authorization"]}
+      - CORS_MAX_AGE=${CORS_MAX_AGE:-86400}
+    networks:
+      - lawviksh_network_external
+    volumes:
+      - app_logs_external:/app/logs
+      - app_uploads_external:/app/uploads
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: lawviksh_nginx_prod_external
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.prod.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+      - nginx_logs_external:/var/log/nginx
+    depends_on:
+      - app
+    networks:
+      - lawviksh_network_external
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+          cpus: '0.1'
+        reservations:
+          memory: 32M
+          cpus: '0.05'
+
+volumes:
+  app_logs_external:
+    driver: local
+  app_uploads_external:
+    driver: local
+  nginx_logs_external:
+    driver: local
+
+networks:
+  lawviksh_network_external:
+    driver: bridge 
