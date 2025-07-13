@@ -1,0 +1,147 @@
+{
+  "timestamp": "2025-07-13T17:22:07.739407",
+  "base_url": "http://localhost:8000",
+  "api_tests": {
+    "total": 18,
+    "passed": 17,
+    "failed": 1,
+    "errors": 0,
+    "success_rate": 94.44444444444444,
+    "results": [
+      {
+        "test_name": "GET /health",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.007043123245239258,
+        "error_message": null
+      },
+      {
+        "test_name": "POST /api/auth/adminlogin",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.028695344924926758,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/auth/verify",
+        "status": "FAIL",
+        "status_code": 0,
+        "response_time": 0,
+        "error_message": "No admin token available"
+      },
+      {
+        "test_name": "POST /api/users/userdata",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 3.443218469619751,
+        "error_message": null
+      },
+      {
+        "test_name": "POST /api/users/creatordata",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.030695676803588867,
+        "error_message": null
+      },
+      {
+        "test_name": "POST /api/users/notinteresteddata",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 3.440706491470337,
+        "error_message": null
+      },
+      {
+        "test_name": "POST /api/feedback/submit",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.02969646453857422,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/users/registereduserdata",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.015353679656982422,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/users/registeredcreatordata",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.005980253219604492,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/users/analytics",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.0077364444732666016,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/feedback/all",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.20861411094665527,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/feedback/analytics",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.05158591270446777,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/feedback/summary",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.13355565071105957,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/data/stats",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.15556716918945312,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/data/export/json",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.2222151756286621,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/data/export/userdata",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.011327743530273438,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/data/export/creatordata",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.006673574447631836,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/data/export/feedbackdata",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.19374442100524902,
+        "error_message": null
+      }
+    ]
+  },
+  "performance_tests": {
+    "total_endpoints": 0,
+    "metrics": []
+  },
+  "stress_tests": {
+    "total_endpoints": 0,
+    "metrics": []
+  }
+}

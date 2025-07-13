@@ -1,0 +1,237 @@
+{
+  "timestamp": "2025-07-13T17:19:56.031698",
+  "base_url": "http://localhost:8000",
+  "api_tests": {
+    "total": 18,
+    "passed": 17,
+    "failed": 1,
+    "errors": 0,
+    "success_rate": 94.44444444444444,
+    "results": [
+      {
+        "test_name": "GET /health",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.006493330001831055,
+        "error_message": null
+      },
+      {
+        "test_name": "POST /api/auth/adminlogin",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.051392555236816406,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/auth/verify",
+        "status": "FAIL",
+        "status_code": 0,
+        "response_time": 0,
+        "error_message": "No admin token available"
+      },
+      {
+        "test_name": "POST /api/users/userdata",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 2.062135934829712,
+        "error_message": null
+      },
+      {
+        "test_name": "POST /api/users/creatordata",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.051373958587646484,
+        "error_message": null
+      },
+      {
+        "test_name": "POST /api/users/notinteresteddata",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 2.062119245529175,
+        "error_message": null
+      },
+      {
+        "test_name": "POST /api/feedback/submit",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.05037522315979004,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/users/registereduserdata",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.008224725723266602,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/users/registeredcreatordata",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.004756927490234375,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/users/analytics",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.006999969482421875,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/feedback/all",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.18368935585021973,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/feedback/analytics",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.055314064025878906,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/feedback/summary",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.12572240829467773,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/data/stats",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.12580537796020508,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/data/export/json",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.17728042602539062,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/data/export/userdata",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.009313106536865234,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/data/export/creatordata",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.0064239501953125,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/data/export/feedbackdata",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.17708396911621094,
+        "error_message": null
+      }
+    ]
+  },
+  "performance_tests": {
+    "total_endpoints": 5,
+    "metrics": [
+      {
+        "total_requests": 50,
+        "successful_requests": 50,
+        "failed_requests": 0,
+        "avg_response_time": 0.9483193445205689,
+        "min_response_time": 0.03537249565124512,
+        "max_response_time": 2.0941052436828613,
+        "median_response_time": 0.07848262786865234,
+        "requests_per_second": 23.76593261662198,
+        "total_time": 2.103851795196533
+      },
+      {
+        "total_requests": 50,
+        "successful_requests": 0,
+        "failed_requests": 50,
+        "avg_response_time": 0.0681463384628296,
+        "min_response_time": 0.022654294967651367,
+        "max_response_time": 0.08667182922363281,
+        "median_response_time": 0.07076776027679443,
+        "requests_per_second": 0.0,
+        "total_time": 0.1070547103881836
+      },
+      {
+        "total_requests": 50,
+        "successful_requests": 0,
+        "failed_requests": 50,
+        "avg_response_time": 0.07621068000793457,
+        "min_response_time": 0.06007266044616699,
+        "max_response_time": 0.0931248664855957,
+        "median_response_time": 0.07616972923278809,
+        "requests_per_second": 0.0,
+        "total_time": 0.11105751991271973
+      },
+      {
+        "total_requests": 50,
+        "successful_requests": 0,
+        "failed_requests": 50,
+        "avg_response_time": 0.06970405101776123,
+        "min_response_time": 0.052999258041381836,
+        "max_response_time": 0.08625531196594238,
+        "median_response_time": 0.07187366485595703,
+        "requests_per_second": 0.0,
+        "total_time": 0.10226893424987793
+      },
+      {
+        "total_requests": 50,
+        "successful_requests": 0,
+        "failed_requests": 50,
+        "avg_response_time": 0.07982230186462402,
+        "min_response_time": 0.06179094314575195,
+        "max_response_time": 0.09422492980957031,
+        "median_response_time": 0.08228957653045654,
+        "requests_per_second": 0.0,
+        "total_time": 0.11248636245727539
+      }
+    ]
+  },
+  "stress_tests": {
+    "total_endpoints": 3,
+    "metrics": [
+      {
+        "total_requests": 200,
+        "successful_requests": 200,
+        "failed_requests": 0,
+        "avg_response_time": 0.12768274784088135,
+        "min_response_time": 0.02362656593322754,
+        "max_response_time": 0.19453763961791992,
+        "median_response_time": 0.12127518653869629,
+        "requests_per_second": 339.90186186916264,
+        "total_time": 0.5884051322937012
+      },
+      {
+        "total_requests": 200,
+        "successful_requests": 0,
+        "failed_requests": 200,
+        "avg_response_time": 0.09371023058891297,
+        "min_response_time": 0.040868520736694336,
+        "max_response_time": 0.11683368682861328,
+        "median_response_time": 0.10147428512573242,
+        "requests_per_second": 0.0,
+        "total_time": 0.446575403213501
+      },
+      {
+        "total_requests": 200,
+        "successful_requests": 200,
+        "failed_requests": 0,
+        "avg_response_time": 0.1706993007659912,
+        "min_response_time": 0.1400623321533203,
+        "max_response_time": 0.1939868927001953,
+        "median_response_time": 0.17579972743988037,
+        "requests_per_second": 258.80756608632527,
+        "total_time": 0.7727749347686768
+      }
+    ]
+  }
+}

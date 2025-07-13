@@ -1,0 +1,147 @@
+{
+  "timestamp": "2025-07-13T17:28:51.512027",
+  "base_url": "http://localhost:8000",
+  "api_tests": {
+    "total": 18,
+    "passed": 17,
+    "failed": 0,
+    "errors": 1,
+    "success_rate": 94.44444444444444,
+    "results": [
+      {
+        "test_name": "GET /health",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.0029993057250976562,
+        "error_message": null
+      },
+      {
+        "test_name": "POST /api/auth/adminlogin",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.0029973983764648438,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/auth/verify",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.0030024051666259766,
+        "error_message": null
+      },
+      {
+        "test_name": "POST /api/users/userdata",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.008015632629394531,
+        "error_message": null
+      },
+      {
+        "test_name": "POST /api/users/creatordata",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.008002996444702148,
+        "error_message": null
+      },
+      {
+        "test_name": "POST /api/users/notinteresteddata",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.007888317108154297,
+        "error_message": null
+      },
+      {
+        "test_name": "POST /api/feedback/submit",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.009205102920532227,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/users/registereduserdata",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.0060045719146728516,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/users/registeredcreatordata",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.004995584487915039,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/users/analytics",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.00710749626159668,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/feedback/all",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.13989782333374023,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/feedback/analytics",
+        "status": "ERROR",
+        "status_code": 0,
+        "response_time": 0.0009961128234863281,
+        "error_message": "Server disconnected"
+      },
+      {
+        "test_name": "GET /api/feedback/summary",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 4.283069610595703,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/data/stats",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.11516094207763672,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/data/export/json",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.21703386306762695,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/data/export/userdata",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.009675741195678711,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/data/export/creatordata",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.006006479263305664,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/data/export/feedbackdata",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.18440485000610352,
+        "error_message": null
+      }
+    ]
+  },
+  "performance_tests": {
+    "total_endpoints": 0,
+    "metrics": []
+  },
+  "stress_tests": {
+    "total_endpoints": 0,
+    "metrics": []
+  }
+}

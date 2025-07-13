@@ -1,0 +1,167 @@
+{
+  "timestamp": "2025-07-13T16:59:22.322866",
+  "base_url": "http://localhost:8000",
+  "api_tests": {
+    "total": 8,
+    "passed": 3,
+    "failed": 5,
+    "errors": 0,
+    "success_rate": 37.5,
+    "results": [
+      {
+        "test_name": "GET /health",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.007158517837524414,
+        "error_message": null
+      },
+      {
+        "test_name": "POST /api/auth/adminlogin",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.04886579513549805,
+        "error_message": null
+      },
+      {
+        "test_name": "GET /api/auth/verify",
+        "status": "FAIL",
+        "status_code": 0,
+        "response_time": 0,
+        "error_message": "No admin token available"
+      },
+      {
+        "test_name": "POST /api/users/userdata",
+        "status": "FAIL",
+        "status_code": 422,
+        "response_time": 5.115012884140015,
+        "error_message": "Expected 200, got 422"
+      },
+      {
+        "test_name": "POST /api/users/creatordata",
+        "status": "FAIL",
+        "status_code": 422,
+        "response_time": 0.050017595291137695,
+        "error_message": "Expected 200, got 422"
+      },
+      {
+        "test_name": "POST /api/users/notinteresteddata",
+        "status": "FAIL",
+        "status_code": 422,
+        "response_time": 5.113827228546143,
+        "error_message": "Expected 200, got 422"
+      },
+      {
+        "test_name": "POST /api/feedback/submit",
+        "status": "PASS",
+        "status_code": 200,
+        "response_time": 0.04884910583496094,
+        "error_message": null
+      },
+      {
+        "test_name": "Admin Endpoints",
+        "status": "FAIL",
+        "status_code": 0,
+        "response_time": 0,
+        "error_message": "No admin token available"
+      }
+    ]
+  },
+  "performance_tests": {
+    "total_endpoints": 5,
+    "metrics": [
+      {
+        "total_requests": 50,
+        "successful_requests": 50,
+        "failed_requests": 0,
+        "avg_response_time": 1.062091088294983,
+        "min_response_time": 0.011398077011108398,
+        "max_response_time": 2.1710312366485596,
+        "median_response_time": 0.08621954917907715,
+        "requests_per_second": 22.954914102632443,
+        "total_time": 2.17818284034729
+      },
+      {
+        "total_requests": 50,
+        "successful_requests": 0,
+        "failed_requests": 50,
+        "avg_response_time": 0.0689945125579834,
+        "min_response_time": 0.022469043731689453,
+        "max_response_time": 0.08769369125366211,
+        "median_response_time": 0.07147634029388428,
+        "requests_per_second": 0.0,
+        "total_time": 0.10579061508178711
+      },
+      {
+        "total_requests": 50,
+        "successful_requests": 0,
+        "failed_requests": 50,
+        "avg_response_time": 0.07872140884399415,
+        "min_response_time": 0.06037712097167969,
+        "max_response_time": 0.09695839881896973,
+        "median_response_time": 0.0815277099609375,
+        "requests_per_second": 0.0,
+        "total_time": 0.1119546890258789
+      },
+      {
+        "total_requests": 50,
+        "successful_requests": 0,
+        "failed_requests": 50,
+        "avg_response_time": 0.07570038795471191,
+        "min_response_time": 0.0564122200012207,
+        "max_response_time": 0.09621644020080566,
+        "median_response_time": 0.07597208023071289,
+        "requests_per_second": 0.0,
+        "total_time": 0.11318135261535645
+      },
+      {
+        "total_requests": 50,
+        "successful_requests": 0,
+        "failed_requests": 50,
+        "avg_response_time": 0.08357620716094971,
+        "min_response_time": 0.06415700912475586,
+        "max_response_time": 0.10236048698425293,
+        "median_response_time": 0.0869905948638916,
+        "requests_per_second": 0.0,
+        "total_time": 0.11818766593933105
+      }
+    ]
+  },
+  "stress_tests": {
+    "total_endpoints": 3,
+    "metrics": [
+      {
+        "total_requests": 200,
+        "successful_requests": 200,
+        "failed_requests": 0,
+        "avg_response_time": 0.11557904601097108,
+        "min_response_time": 0.048807621002197266,
+        "max_response_time": 0.14072847366333008,
+        "median_response_time": 0.1230611801147461,
+        "requests_per_second": 371.47699228182734,
+        "total_time": 0.5383913516998291
+      },
+      {
+        "total_requests": 200,
+        "successful_requests": 0,
+        "failed_requests": 200,
+        "avg_response_time": 0.10173027276992798,
+        "min_response_time": 0.053084373474121094,
+        "max_response_time": 0.12339425086975098,
+        "median_response_time": 0.10784912109375,
+        "requests_per_second": 0.0,
+        "total_time": 0.48068881034851074
+      },
+      {
+        "total_requests": 200,
+        "successful_requests": 0,
+        "failed_requests": 200,
+        "avg_response_time": 0.1385802757740021,
+        "min_response_time": 0.08509302139282227,
+        "max_response_time": 0.19646859169006348,
+        "median_response_time": 0.12908589839935303,
+        "requests_per_second": 0.0,
+        "total_time": 0.6448791027069092
+      }
+    ]
+  }
+}
