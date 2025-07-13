@@ -1,345 +1,395 @@
 # LawViksh Backend Docker Deployment Guide
 
-This guide provides comprehensive instructions for deploying the LawViksh Backend API using Docker containers.
+This guide provides comprehensive instructions for deploying the LawViksh Backend API using Docker and Docker Compose.
 
 ## 📋 Prerequisites
 
-Before you begin, ensure you have the following installed:
-
-- **Docker Desktop** (for Windows/Mac) or **Docker Engine** (for Linux)
-- **Docker Compose** (usually included with Docker Desktop)
-- **Git** (for cloning the repository)
+- Docker Engine 20.10+
+- Docker Compose 2.0+
+- Git
+- OpenSSL (for SSL certificates)
 
 ## 🚀 Quick Start
 
-### 1. Clone and Navigate to Project
+### 1. Clone and Setup
+
 ```bash
-git clone <your-repository-url>
+# Clone the repository
+git clone <your-repo-url>
 cd JoiningBetarepo
+
+# Make deployment script executable (Linux/Mac)
+chmod +x deploy.sh
 ```
 
-### 2. Set Up Environment Variables
+### 2. Environment Configuration
+
+Create a `.env` file with your configuration:
+
 ```bash
-# Copy the example environment file
+# Copy example environment file
 cp env.example .env
 
-# Edit the .env file with your production values
-# Use a secure text editor to modify the values
+# Edit the configuration
+nano .env
 ```
 
-### 3. Deploy Using Scripts
-
-#### For Windows:
-```cmd
-# Development deployment
-docker-deploy.bat start
-
-# Production deployment
-docker-deploy.bat production
-
-# View logs
-docker-deploy.bat logs
-
-# Stop services
-docker-deploy.bat stop
-```
-
-#### For Linux/Mac:
-```bash
-# Make script executable (first time only)
-chmod +x docker-deploy.sh
-
-# Development deployment
-./docker-deploy.sh start
-
-# Production deployment
-./docker-deploy.sh production
-
-# View logs
-./docker-deploy.sh logs
-
-# Stop services
-./docker-deploy.sh stop
-```
-
-## 📁 Docker Files Overview
-
-### Core Files
-- **`Dockerfile`** - Multi-stage Docker image for the FastAPI application
-- **`docker-compose.yml`** - Development environment with MySQL and optional Nginx
-- **`docker-compose.prod.yml`** - Production environment with enhanced security
-- **`.dockerignore`** - Excludes unnecessary files from Docker build context
-
-### Configuration Files
-- **`nginx.conf`** - Nginx configuration for development
-- **`nginx.prod.conf`** - Production Nginx configuration with security headers
-- **`env.example`** - Template for environment variables
-
-### Deployment Scripts
-- **`docker-deploy.sh`** - Linux/Mac deployment script
-- **`docker-deploy.bat`** - Windows deployment script
-
-## 🔧 Manual Deployment
-
-### Development Environment
-
-1. **Build and start services:**
-```bash
-docker-compose up -d --build
-```
-
-2. **Check service status:**
-```bash
-docker-compose ps
-```
-
-3. **View logs:**
-```bash
-docker-compose logs -f
-```
-
-4. **Stop services:**
-```bash
-docker-compose down
-```
-
-### Production Environment
-
-1. **Set up environment variables:**
-```bash
-cp env.example .env
-# Edit .env with production values
-```
-
-2. **Build and start production services:**
-```bash
-docker-compose -f docker-compose.prod.yml up -d --build
-```
-
-3. **Check production status:**
-```bash
-docker-compose -f docker-compose.prod.yml ps
-```
-
-## 🔐 Environment Variables
-
-Create a `.env` file with the following variables:
+Example `.env` configuration:
 
 ```env
 # Database Configuration
-MYSQL_ROOT_PASSWORD=your_secure_root_password
-MYSQL_DATABASE=lawviksh_db
-MYSQL_USER=lawviksh_user
-MYSQL_PASSWORD=your_secure_user_password
+DB_HOST=mysql
+DB_PORT=3306
+DB_NAME=lawviksh_db
+DB_USER=root
+DB_PASSWORD=Sahil@123
 
 # Security Configuration
-SECRET_KEY=your_secure_secret_key_here_make_it_long_and_random
+SECRET_KEY=your-secret-key-here
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 
 # Admin Credentials
 ADMIN_USERNAME=admin
-ADMIN_PASSWORD=your_secure_admin_password
+ADMIN_PASSWORD=admin123
 
 # Server Configuration
 HOST=0.0.0.0
 PORT=8000
-DEBUG=false
+DEBUG=False
 
-# CORS Configuration (comma-separated)
-CORS_ORIGINS=https://www.lawvriksh.com,https://lawvriksh.com,http://localhost:3000
+# CORS Configuration
+CORS_ORIGINS=["http://localhost:3000","https://www.lawvriksh.com","https://lawvriksh.com"]
+```
+
+### 3. Deploy Application
+
+#### Development Environment
+```bash
+# Using deployment script
+./deploy.sh dev
+
+# Or using docker-compose directly
+docker-compose up -d
+```
+
+#### Production Environment
+```bash
+# Using deployment script
+./deploy.sh prod
+
+# Or using docker-compose directly
+docker-compose -f docker-compose.prod.yml up -d
+```
+
+## 🐳 Docker Configuration
+
+### Multi-stage Dockerfile
+
+The `Dockerfile` uses a multi-stage build approach:
+
+1. **Builder Stage**: Installs dependencies and creates virtual environment
+2. **Production Stage**: Creates optimized production image
+
+Key features:
+- Python 3.11 slim base image
+- Multi-stage build for smaller final image
+- Non-root user for security
+- Health checks
+- Optimized layer caching
+
+### Docker Compose Services
+
+#### Development (`docker-compose.yml`)
+- **MySQL 8.0**: Database with persistent storage
+- **FastAPI App**: Application with hot-reload
+- **Nginx**: Optional reverse proxy (production profile)
+
+#### Production (`docker-compose.prod.yml`)
+- **MySQL 8.0**: Database with resource limits
+- **FastAPI App**: Optimized production build
+- **Nginx**: Reverse proxy with SSL support
+
+## 🔧 Deployment Scripts
+
+### Linux/Mac (`deploy.sh`)
+
+```bash
+# Development deployment
+./deploy.sh dev
+
+# Production deployment
+./deploy.sh prod
+
+# Stop all containers
+./deploy.sh stop
+
+# View logs
+./deploy.sh logs
+./deploy.sh logs prod
+
+# Restart services
+./deploy.sh restart
+./deploy.sh restart prod
+
+# Clean up resources
+./deploy.sh clean
+
+# Check status
+./deploy.sh status
+```
+
+### Windows (`docker-deploy.bat`)
+
+```cmd
+# Development deployment
+docker-deploy.bat dev
+
+# Production deployment
+docker-deploy.bat prod
+
+# Stop all containers
+docker-deploy.bat stop
+
+# View logs
+docker-deploy.bat logs
+docker-deploy.bat logs prod
+
+# Restart services
+docker-deploy.bat restart
+docker-deploy.bat restart prod
+
+# Clean up resources
+docker-deploy.bat clean
+
+# Check status
+docker-deploy.bat status
 ```
 
 ## 🌐 SSL/HTTPS Setup
 
-For production deployment with HTTPS:
+### Automatic SSL Setup
 
-1. **Create SSL directory:**
+The deployment scripts automatically create self-signed certificates for testing:
+
 ```bash
-mkdir ssl
+# Certificates are created automatically during production deployment
+./deploy.sh prod
 ```
 
-2. **Add your SSL certificates:**
+### Manual SSL Setup
+
+For production with Let's Encrypt certificates:
+
 ```bash
-# Copy your SSL certificates to the ssl directory
-cp your-cert.pem ssl/cert.pem
-cp your-key.pem ssl/key.pem
+# Install certbot
+sudo apt install certbot
+
+# Get SSL certificate
+sudo certbot certonly --standalone -d lawvriksh.com -d www.lawvriksh.com
+
+# Copy certificates
+sudo cp /etc/letsencrypt/live/lawvriksh.com/fullchain.pem ssl/cert.pem
+sudo cp /etc/letsencrypt/live/lawvriksh.com/privkey.pem ssl/key.pem
+sudo chmod 644 ssl/cert.pem
+sudo chmod 600 ssl/key.pem
 ```
 
-3. **Deploy with Nginx:**
-```bash
-# The production compose file includes Nginx with SSL
-docker-compose -f docker-compose.prod.yml up -d
-```
+## 📊 Monitoring and Management
 
-## 📊 Monitoring and Health Checks
+### Health Checks
 
-### Health Check Endpoint
-The application includes a health check endpoint:
+The application includes health check endpoints:
+
 ```bash
+# Application health
 curl http://localhost:8000/health
-```
 
-### Docker Health Checks
-All services include Docker health checks:
-```bash
-# Check container health
+# Docker health checks
 docker-compose ps
-
-# View health check logs
-docker inspect <container_name>
 ```
 
-## 🔍 Troubleshooting
-
-### Common Issues
-
-1. **Port already in use:**
-```bash
-# Check what's using the port
-netstat -tulpn | grep :8000
-
-# Stop conflicting services or change ports in docker-compose.yml
-```
-
-2. **Database connection issues:**
-```bash
-# Check MySQL container logs
-docker-compose logs mysql
-
-# Ensure database is ready before starting app
-docker-compose up mysql -d
-# Wait a few seconds, then start app
-docker-compose up app -d
-```
-
-3. **Permission issues (Linux/Mac):**
-```bash
-# Fix file permissions
-sudo chown -R $USER:$USER .
-chmod +x docker-deploy.sh
-```
-
-4. **Build failures:**
-```bash
-# Clean Docker cache
-docker system prune -a
-
-# Rebuild without cache
-docker-compose build --no-cache
-```
-
-### Logs and Debugging
+### Logs
 
 ```bash
-# View all service logs
-docker-compose logs
-
-# View specific service logs
-docker-compose logs app
-docker-compose logs mysql
-
-# Follow logs in real-time
+# View all logs
 docker-compose logs -f
 
-# Access container shell
-docker-compose exec app bash
-docker-compose exec mysql mysql -u root -p
+# View specific service logs
+docker-compose logs -f app
+docker-compose logs -f mysql
+
+# Production logs
+docker-compose -f docker-compose.prod.yml logs -f
 ```
 
-## 🔄 Updates and Maintenance
+### Resource Monitoring
 
-### Updating the Application
-
-1. **Pull latest changes:**
 ```bash
-git pull origin main
+# Container resource usage
+docker stats
+
+# System resource usage
+htop
 ```
 
-2. **Rebuild and restart:**
-```bash
-# Development
-docker-compose down
-docker-compose up -d --build
+## 🔄 Backup and Recovery
 
-# Production
-docker-compose -f docker-compose.prod.yml down
-docker-compose -f docker-compose.prod.yml up -d --build
-```
-
-### Database Backups
+### Database Backup
 
 ```bash
 # Create backup
-docker-compose exec mysql mysqldump -u root -p lawviksh_db > backup.sql
+docker-compose exec mysql mysqldump -u root -p lawviksh_db > backup_$(date +%Y%m%d_%H%M%S).sql
 
 # Restore backup
-docker-compose exec -T mysql mysql -u root -p lawviksh_db < backup.sql
+docker-compose exec -T mysql mysql -u root -p lawviksh_db < backup_file.sql
 ```
 
-### Cleanup
+### Volume Backup
 
 ```bash
-# Remove unused containers, networks, and images
-docker system prune -a
+# Backup volumes
+docker run --rm -v lawviksh_mysql_data:/data -v $(pwd):/backup alpine tar czf /backup/mysql_backup.tar.gz -C /data .
 
-# Remove specific volumes (WARNING: This will delete data)
-docker volume rm joiningbetarepo_mysql_data
+# Restore volumes
+docker run --rm -v lawviksh_mysql_data:/data -v $(pwd):/backup alpine tar xzf /backup/mysql_backup.tar.gz -C /data
 ```
 
-## 🛡️ Security Considerations
+## 🛠️ Troubleshooting
 
-### Production Security Checklist
+### Common Issues
 
-- [ ] Use strong, unique passwords for all services
-- [ ] Generate a secure SECRET_KEY (use `generate_secret_key.py`)
-- [ ] Enable HTTPS with valid SSL certificates
-- [ ] Configure firewall rules
-- [ ] Regularly update Docker images and dependencies
-- [ ] Monitor logs for suspicious activity
-- [ ] Use production Nginx configuration
-- [ ] Enable rate limiting
-- [ ] Set up automated backups
+#### 1. Port Already in Use
+```bash
+# Check what's using the port
+sudo lsof -i :8000
 
-### Security Features Included
+# Stop conflicting services
+sudo systemctl stop apache2  # if Apache is running
+```
 
-- **Non-root user** in Docker containers
-- **Read-only filesystems** where possible
-- **Security headers** in Nginx
-- **Rate limiting** for API endpoints
-- **CORS protection**
-- **Input validation** and sanitization
-- **SQL injection protection** via parameterized queries
+#### 2. Database Connection Issues
+```bash
+# Check MySQL container status
+docker-compose ps mysql
+
+# Check MySQL logs
+docker-compose logs mysql
+
+# Access MySQL directly
+docker-compose exec mysql mysql -u root -p
+```
+
+#### 3. Permission Issues
+```bash
+# Fix file permissions
+sudo chown -R $USER:$USER .
+
+# Fix Docker permissions
+sudo usermod -aG docker $USER
+# Log out and back in
+```
+
+#### 4. SSL Certificate Issues
+```bash
+# Check certificate validity
+openssl x509 -in ssl/cert.pem -text -noout
+
+# Regenerate certificates
+rm -rf ssl/
+./deploy.sh prod
+```
+
+### Debug Commands
+
+```bash
+# Access container shell
+docker-compose exec app bash
+docker-compose exec mysql mysql -u root -p
+
+# Check network connectivity
+docker network ls
+docker network inspect lawviksh_lawviksh_network
+
+# Check container details
+docker inspect lawviksh_app
+```
 
 ## 📈 Performance Optimization
 
-### Docker Optimizations
+### Resource Limits
 
-- **Multi-stage builds** for smaller images
-- **Layer caching** for faster builds
-- **Health checks** for better orchestration
-- **Resource limits** in production
+The production compose file includes resource limits:
 
-### Application Optimizations
+- **App**: 1GB RAM, 1 CPU
+- **MySQL**: 512MB RAM, 0.5 CPU
+- **Nginx**: 128MB RAM, 0.25 CPU
 
-- **Connection pooling** for database
-- **Gzip compression** via Nginx
-- **Static file caching**
-- **Load balancing** ready
+### Optimization Tips
 
-## 🆘 Support
+1. **Use Production Build**: Always use `docker-compose.prod.yml` for production
+2. **Enable Caching**: Use Docker layer caching for faster builds
+3. **Monitor Resources**: Use `docker stats` to monitor resource usage
+4. **Regular Updates**: Keep base images updated for security patches
 
-If you encounter issues:
+## 🔒 Security Best Practices
 
-1. Check the troubleshooting section above
-2. Review Docker and application logs
-3. Ensure all prerequisites are met
-4. Verify environment variables are correctly set
-5. Check network connectivity between containers
+1. **Use Strong Passwords**: Change default passwords in `.env`
+2. **Limit Network Access**: Use Docker networks for service communication
+3. **Regular Updates**: Keep images and dependencies updated
+4. **SSL/TLS**: Use proper SSL certificates in production
+5. **Non-root User**: Application runs as non-root user
+6. **Resource Limits**: Prevent resource exhaustion attacks
 
-## 📝 Additional Resources
+## 📞 Support
 
-- [Docker Documentation](https://docs.docker.com/)
-- [Docker Compose Documentation](https://docs.docker.com/compose/)
-- [FastAPI Documentation](https://fastapi.tiangolo.com/)
-- [Nginx Documentation](https://nginx.org/en/docs/) 
+### Useful Commands
+
+```bash
+# Quick status check
+./deploy.sh status
+
+# View all logs
+./deploy.sh logs
+
+# Restart everything
+./deploy.sh restart
+
+# Complete cleanup and redeploy
+./deploy.sh clean
+./deploy.sh prod
+```
+
+### Access URLs
+
+After successful deployment:
+
+- **API Base**: http://localhost:8000/api/ (dev) / https://www.lawvriksh.com/api/ (prod)
+- **Documentation**: http://localhost:8000/docs
+- **Health Check**: http://localhost:8000/health
+- **ReDoc**: http://localhost:8000/redoc
+
+### Environment Variables
+
+Key environment variables for customization:
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `DB_HOST` | Database host | `mysql` |
+| `DB_PASSWORD` | Database password | `Sahil@123` |
+| `SECRET_KEY` | JWT secret key | Auto-generated |
+| `DEBUG` | Debug mode | `False` (prod) |
+| `CORS_ORIGINS` | Allowed origins | Domain-specific |
+
+## 🎯 Production Checklist
+
+- [ ] Environment variables configured
+- [ ] SSL certificates installed
+- [ ] Database initialized with data
+- [ ] Health checks passing
+- [ ] Resource limits configured
+- [ ] Logs being collected
+- [ ] Backup strategy in place
+- [ ] Monitoring configured
+- [ ] Security measures implemented
+- [ ] Performance optimized 
