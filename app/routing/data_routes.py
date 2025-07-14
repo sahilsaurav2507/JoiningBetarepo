@@ -301,6 +301,44 @@ async def export_feedback_data(payload: dict = Depends(verify_admin_token)):
             data={"error": str(e)}
         )
 
+@router.get("/export/notintdata", response_model=BaseResponse)
+async def export_not_interested_data(payload: dict = Depends(verify_admin_token)):
+    """
+    Export not interested data only (Admin only)
+    """
+    try:
+        logger.info("Starting not interested data export...")
+        # Get not interested data
+        try:
+            not_interested = UserService.get_all_not_interested()
+            logger.info(f"Retrieved {len(not_interested)} not interested users")
+        except Exception as e:
+            logger.error(f"Error getting not interested users: {e}")
+            not_interested = []
+        # Prepare export data
+        export_data = {
+            "export_date": str(payload.get("exp", "")),
+            "data_type": "not_interested_data",
+            "not_interested": not_interested,
+            "summary": {
+                "total_not_interested": len(not_interested),
+                "export_timestamp": str(payload.get("exp", ""))
+            }
+        }
+        logger.info("Not interested data export prepared successfully")
+        return BaseResponse(
+            success=True,
+            message="Not interested data exported successfully",
+            data=export_data
+        )
+    except Exception as e:
+        logger.error(f"Error exporting not interested data: {e}")
+        return BaseResponse(
+            success=False,
+            message="Failed to export not interested data",
+            data={"error": str(e)}
+        )
+
 @router.get("/stats", response_model=BaseResponse)
 async def get_data_statistics(payload: dict = Depends(verify_admin_token)):
     """
