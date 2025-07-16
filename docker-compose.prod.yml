@@ -52,9 +52,17 @@ services:
       - HOST=0.0.0.0
       - PORT=8000
       - DEBUG=False
+<<<<<<< HEAD
       - API_BASE_URL=${API_BASE_URL:-https://beta.lawvriksh.com/api}
       - API_PREFIX=${API_PREFIX:-/api}
       - CORS_ORIGINS=${CORS_ORIGINS:-["https://beta.lawvriksh.com"]}
+=======
+      - API_BASE_URL=${API_BASE_URL:-https://www.beta.lawvriksh.com/api}
+      - API_PREFIX=${API_PREFIX:-/api}
+      - CORS_ORIGINS=${CORS_ORIGINS:-["http://www.beta.lawvriksh.com","https://app.beta.lawvriksh.com","https://admin.beta.lawvriksh.com"]
+
+      - CORS_ORIGINS=${CORS_ORIGINS:-["https://www.lawvriksh.com","https://lawvriksh.com","https://app.lawvriksh.com","https://admin.lawvriksh.com"]}
+>>>>>>> 2281904e4ccddb87cb1a71c92b9be9ce0fb3f91a
       - CORS_ALLOW_CREDENTIALS=${CORS_ALLOW_CREDENTIALS:-true}
       - CORS_ALLOW_METHODS=${CORS_ALLOW_METHODS:-["GET","POST","PUT","DELETE","OPTIONS","PATCH"]}
       - CORS_ALLOW_HEADERS=${CORS_ALLOW_HEADERS:-["*"]}
@@ -146,6 +154,10 @@ volumes:
 
 networks:
   lawviksh_network_prod:
+<<<<<<< HEAD
     driver: bridge
 
 
+=======
+    driver: bridge 
+>>>>>>> 2281904e4ccddb87cb1a71c92b9be9ce0fb3f91a

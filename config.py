@@ -30,7 +30,31 @@ class Settings(BaseSettings):
     
     # CORS Configuration - Production ready
     cors_origins: List[str] = [
+<<<<<<< HEAD
         "https://beta.lawvriksh.com"
+=======
+        # Development origins
+        "http://localhost:3000",
+        "http://localhost:3001", 
+        "http://localhost:5173",
+        "http://localhost:8080",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:3001",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:8080",
+        # Production origins
+        "https://www.lawvriksh.com",
+        "https://lawvriksh.com",
+        "http://www.lawvriksh.com",
+        "http://lawvriksh.com",
+        "https://www.beta.lawvriksh.com",
+        "https://beta.lawvriksh.com",
+        "http://www.beta.lawvriksh.com",
+        "http://beta.lawvriksh.com",
+        # Frontend subdomains (if any)
+        "https://app.lawvriksh.com",
+        "https://admin.lawvriksh.com"
+>>>>>>> 2281904e4ccddb87cb1a71c92b9be9ce0fb3f91a
     ]
     
     # CORS additional settings
