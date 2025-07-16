@@ -44,6 +44,10 @@ class Settings(BaseSettings):
         "https://lawvriksh.com",
         "http://www.lawvriksh.com",
         "http://lawvriksh.com",
+        "https://www.beta.lawvriksh.com",
+        "https://beta.lawvriksh.com",
+        "http://www.beta.lawvriksh.com",
+        "http://beta.lawvriksh.com",
         # Frontend subdomains (if any)
         "https://app.lawvriksh.com",
         "https://admin.lawvriksh.com"
