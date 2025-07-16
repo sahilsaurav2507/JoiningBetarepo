@@ -52,7 +52,7 @@ services:
       - HOST=0.0.0.0
       - PORT=8000
       - DEBUG=False
-      - API_BASE_URL=${API_BASE_URL:-https://www.lawvriksh.com/api}
+      - API_BASE_URL=${API_BASE_URL:-https://www.beta.lawvriksh.com/api}
       - API_PREFIX=${API_PREFIX:-/api}
       - CORS_ORIGINS=${CORS_ORIGINS:-["http://www.beta.lawvriksh.com","https://app.beta.lawvriksh.com","https://admin.beta.lawvriksh.com"]
 
