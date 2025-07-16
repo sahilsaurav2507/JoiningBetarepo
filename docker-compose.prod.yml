@@ -4,20 +4,19 @@ services:
   # MySQL Database
   mysql:
     image: mysql:8.0
-    container_name: lawviksh_mysql_prod
+    container_name: lawvriksh-mysql
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-Sahil@123}
+      # Sets the root password. The app will connect with these credentials.
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-Sahil@123456//}
       MYSQL_DATABASE: ${DB_NAME:-lawviksh_db}
-      MYSQL_USER: ${DB_USER:-lawviksh_user}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-lawviksh_pass}
     volumes:
       - mysql_data_prod:/var/lib/mysql
       - ./lawdata.sql:/docker-entrypoint-initdb.d/lawdata.sql
     networks:
       - lawviksh_network_prod
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-Sahil@123}"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-Sahil@123456//}"]
       timeout: 60s
       retries: 20
       start_period: 60s
@@ -42,8 +41,9 @@ services:
       - DB_HOST=mysql
       - DB_PORT=3306
       - DB_NAME=${DB_NAME:-lawviksh_db}
-      - DB_USER=${DB_USER:-root}
-      - DB_PASSWORD=${DB_ROOT_PASSWORD:-Sahil@123}
+      # Connects as the root user, matching the mysql service config
+      - DB_USER=root
+      - DB_PASSWORD=${DB_ROOT_PASSWORD:-Sahil@123456//}
       - SECRET_KEY=${SECRET_KEY:-09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7}
       - ALGORITHM=${ALGORITHM:-HS256}
       - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES:-30}
@@ -52,9 +52,9 @@ services:
       - HOST=0.0.0.0
       - PORT=8000
       - DEBUG=False
-      - API_BASE_URL=${API_BASE_URL:-https://www.lawvriksh.com/api}
+      - API_BASE_URL=${API_BASE_URL:-https://beta.lawvriksh.com/api}
       - API_PREFIX=${API_PREFIX:-/api}
-      - CORS_ORIGINS=${CORS_ORIGINS:-["https://www.lawvriksh.com","https://lawvriksh.com","https://app.lawvriksh.com","https://admin.lawvriksh.com"]}
+      - CORS_ORIGINS=${CORS_ORIGINS:-["https://beta.lawvriksh.com"]}
       - CORS_ALLOW_CREDENTIALS=${CORS_ALLOW_CREDENTIALS:-true}
       - CORS_ALLOW_METHODS=${CORS_ALLOW_METHODS:-["GET","POST","PUT","DELETE","OPTIONS","PATCH"]}
       - CORS_ALLOW_HEADERS=${CORS_ALLOW_HEADERS:-["*"]}
@@ -83,6 +83,31 @@ services:
           memory: 512M
           cpus: '0.5'
 
+  # Remix Frontend
+  remix:
+    build:
+      context: ./Frontend/Beta-Frontend2
+      dockerfile: Dockerfile
+    container_name: lawviksh_remix_prod
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - VITE_API_BASE_URL=https://lawvriksh.com/api
+    networks:
+      - lawviksh_network_prod
+    depends_on:
+      - app
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+
   # Nginx Reverse Proxy
   nginx:
     image: nginx:alpine
@@ -97,6 +122,7 @@ services:
       - nginx_logs:/var/log/nginx
     depends_on:
       - app
+      - remix
     networks:
       - lawviksh_network_prod
     deploy:
@@ -120,4 +146,6 @@ volumes:
 
 networks:
   lawviksh_network_prod:
-    driver: bridge 
+    driver: bridge
+
+
